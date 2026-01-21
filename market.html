@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market - VionNetwork</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">VionNetwork</div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Anasayfa</a></li>
+                <li><a href="index.html#features" class="nav-link">Özellikler</a></li>
+                <li><a href="market.html" class="nav-link active">Market</a></li>
+                <li><a href="balance.html" class="nav-link">Bakiye</a></li>
+                <li><a href="support.html" class="nav-link">Destek</a></li>
+            </ul>
+            <a href="market.html" class="nav-cta">Mağaza <i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header" style="padding-top: 120px; text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 3rem; margin-bottom: 10px;">Sunucu Mağazası</h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">Ayrıcalıklı özelliklere sahip olmak için en iyi adres.
+        </p>
+    </header>
+
+    <!-- Store Section -->
+    <section class="store-section" style="padding-top: 20px; min-height: 60vh;">
+
+        <!-- Step 1: Game Mode -->
+        <div id="step-gamemode" class="market-step">
+            <h2 style="text-align: center; margin-bottom: 40px;">Oyun Modu Seçin</h2>
+            <div class="selection-grid">
+                <!-- Skyblock -->
+                <div class="selection-card" onclick="selectGameMode('skyblock')">
+                    <i class="fa-solid fa-cube"></i>
+                    <h3>Skyblock</h3>
+                    <p style="color: var(--text-muted);">En popüler oyun modumuz.</p>
+                </div>
+                <!-- Skyblock 2 (Coming Soon) -->
+                <div class="selection-card" style="opacity: 0.5; cursor: not-allowed;">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <h3>Skyblock 2</h3>
+                    <p style="color: var(--text-muted);">Yakında...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Category -->
+        <div id="step-category" class="market-step hidden">
+            <div class="step-header">
+                <button class="btn-subtle" onclick="goBackToGameMode()"><i class="fa-solid fa-arrow-left"></i>
+                    Geri</button>
+                <h2 class="step-title">Kategori Seçin</h2>
+            </div>
+            <div class="selection-grid">
+                <div class="selection-card" onclick="selectCategory('vip')">
+                    <i class="fa-solid fa-crown" style="color: #ffd700;"></i>
+                    <h3>VIP Üyelikler</h3>
+                </div>
+                <div class="selection-card" onclick="selectCategory('keys')">
+                    <i class="fa-solid fa-key" style="color: #9b59b6;"></i>
+                    <h3>Kasa Anahtarları</h3>
+                </div>
+                <div class="selection-card" onclick="selectCategory('coins')">
+                    <i class="fa-solid fa-coins" style="color: #f1c40f;"></i>
+                    <h3>Coin & Eşya</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Products -->
+        <div id="step-products" class="market-step hidden">
+            <div class="step-header">
+                <button class="btn-subtle" onclick="goBackToCategory()"><i class="fa-solid fa-arrow-left"></i>
+                    Geri</button>
+                <h2 class="step-title" id="selected-category-title">Ürünler</h2>
+            </div>
+
+            <!-- VIP Container -->
+            <div id="prod-vip" class="product-group hidden store-grid">
+                <div class="product-card">
+                    <span class="product-tag">POPÜLER</span>
+                    <div class="product-image">
+                        <i class="fa-solid fa-crown" style="color: #ffd700;"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>VIP Üyelik</h3>
+                        <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Hızlı kitler, özel chat rengi ve
+                            uçuş hakkı.</p>
+                        <span class="product-price">₺50.00</span>
+                        <button class="buy-btn" onclick="buyItem('vip', 'VIP Üyelik', 50, 'fa-crown')">Satın Al</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fa-solid fa-shield-halved" style="color: #b02e48;"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>MVP Üyelik</h3>
+                        <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">2x Kredi, özel efektler ve MVP
+                            kitleri.</p>
+                        <span class="product-price">₺120.00</span>
+                        <button class="buy-btn" onclick="buyItem('mvp', 'MVP Üyelik', 120, 'fa-shield-halved')">Satın
+                            Al</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fa-solid fa-star" style="color: #e67e22;"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>MVP+ Üyelik</h3>
+                        <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Sınırsız özellikler, özel tag ve
+                            daha fazlası.</p>
+                        <span class="product-price">₺200.00</span>
+                        <button class="buy-btn" onclick="buyItem('mvp_plus', 'MVP+ Üyelik', 200, 'fa-star')">Satın
+                            Al</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keys Container -->
+            <div id="prod-keys" class="product-group hidden store-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fa-solid fa-key" style="color: #9b59b6;"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>Efsanevi Kasa Anahtarı</h3>
+                        <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Efsanevi kasa açmak için kullanılır.
+                        </p>
+                        <span class="product-price">₺15.00</span>
+                        <button class="buy-btn"
+                            onclick="buyItem('key_legend', 'Efsanevi Kasa Anahtarı', 15, 'fa-key')">Satın Al</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fa-solid fa-key" style="color: #3498db;"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>Nadir Kasa Anahtarı</h3>
+                        <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Nadir eşyalar içerir.</p>
+                        <span class="product-price">₺10.00</span>
+                        <button class="buy-btn" onclick="buyItem('key_rare', 'Nadir Kasa Anahtarı', 10, 'fa-key')">Satın
+                            Al</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coins/Tools Container -->
+            <div id="prod-coins" class="product-group hidden store-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fa-solid fa-hammer" style="color: #3498db;"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>Verimlilik X Kazma</h3>
+                        <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Ada kazmak artık çok daha hızlı!</p>
+                        <span class="product-price">₺40.00</span>
+                        <button class="buy-btn"
+                            onclick="buyItem('tool_pickaxe', 'Verimlilik X Kazma', 40, 'fa-hammer')">Satın Al</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fa-solid fa-sack-dollar" style="color: #2ecc71;"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>1M Oyun Parası</h3>
+                        <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Ekonomiye hızlı bir giriş yap.</p>
+                        <span class="product-price">₺25.00</span>
+                        <button class="buy-btn"
+                            onclick="buyItem('coin_1m', '1M Oyun Parası', 25, 'fa-sack-dollar')">Satın Al</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-logo">VionNetwork.</span>
+        <p>&copy; 2026 VionNetwork. Minecraft, Mojang AB'nin ticari markasıdır.</p>
+        <div style="margin-top: 20px; font-size: 1.2rem;">
+            <a href="#" style="margin: 0 10px;"><i class="fa-brands fa-discord"></i></a>
+            <a href="#" style="margin: 0 10px;"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" style="margin: 0 10px;"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+    <script src="market.js"></script>
+</body>
+
+</html>

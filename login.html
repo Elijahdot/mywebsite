@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - VionNetwork</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo"><a href="index.html">VionNetwork</a></div>
+        </div>
+    </nav>
+
+    <!-- Auth Container -->
+    <section class="auth-section">
+        <div class="auth-box">
+            <div class="auth-header">
+                <button id="tabLogin" class="auth-tab active" onclick="switchTab('login')">Giriş Yap</button>
+                <button id="tabRegister" class="auth-tab" onclick="switchTab('register')">Kayıt Ol</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label>E-posta</label>
+                    <input type="email" id="loginEmail" required placeholder="ornek@domain.com">
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" id="loginPassword" required placeholder="********">
+                </div>
+                <button type="submit" class="btn-submit full-width">Giriş Yap</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form hidden">
+                <div class="form-group">
+                    <label>Kullanıcı Adı (Minecraft)</label>
+                    <input type="text" id="regUsername" required placeholder="Steve">
+                </div>
+                <div class="form-group">
+                    <label>E-posta</label>
+                    <input type="email" id="regEmail" required placeholder="ornek@domain.com">
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" id="regPassword" required placeholder="********">
+                </div>
+                <button type="submit" class="btn-submit full-width">Kayıt Ol</button>
+            </form>
+
+            <div id="authAlert" class="alert-box hidden"></div>
+        </div>
+    </section>
+
+    <script src="auth.js"></script>
+    <script>
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            const alertBox = document.getElementById('authAlert');
+
+            alertBox.classList.add('hidden'); // Clear alerts
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabLogin.classList.remove('active');
+                tabRegister.classList.add('active');
+            }
+        }
+    </script>
+</body>
+
+</html>

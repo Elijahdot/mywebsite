@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandık - VionNetwork</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .inventory-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 110px auto 40px;
+            padding: 0 20px;
+        }
+
+        /* Sidebar: Activity Log */
+        .inventory-sidebar {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            height: fit-content;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .log-list {
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .log-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            align-items: flex-start;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+
+        .log-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .log-content h4 {
+            margin: 0 0 5px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .log-content p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .log-time {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Main: Items Grid */
+        .inventory-main {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            min-height: 400px;
+        }
+
+        .inv-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .inv-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .inv-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+
+        .inv-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: block;
+        }
+
+        .inv-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .inv-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .inv-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-use {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-use:hover {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-gift {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-gift:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        /* Modal for Gift */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo"><a href="index.html">VionNetwork</a></div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Anasayfa</a></li>
+                <li><a href="index.html#features" class="nav-link">Özellikler</a></li>
+                <li><a href="market.html" class="nav-link">Market</a></li>
+                <li><a href="balance.html" class="nav-link">Bakiye</a></li>
+                <li><a href="support.html" class="nav-link">Destek</a></li>
+            </ul>
+            <a href="market.html" class="nav-cta">Mağaza <i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+    </nav>
+
+    <div class="inventory-layout">
+
+        <!-- Sidebar - Activity Log -->
+        <div class="inventory-sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fa-solid fa-clock-rotate-left"></i> Son Aktiviteler</h3>
+            </div>
+            <div id="activityLogList" class="log-list">
+                <!-- Populated by JS -->
+                <div style="padding:20px; text-align:center; color:#666;">Yükleniyor...</div>
+            </div>
+        </div>
+
+        <!-- Main - Inventory Grid -->
+        <div class="inventory-main">
+            <h2 style="margin-bottom: 30px;"><i class="fa-solid fa-box-open"></i> Sandığım</h2>
+            <div id="inventoryGrid" class="inv-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-logo">VionNetwork.</span>
+        <p>&copy; 2026 VionNetwork. Minecraft, Mojang AB'nin ticari markasıdır.</p>
+    </footer>
+
+    <!-- Gift Modal -->
+    <div id="giftModal" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <h3><i class="fa-solid fa-gift" style="color: #3498db; margin-right: 10px;"></i>Hediye Gönder</h3>
+            <p style="margin-bottom: 20px;">Bu eşyayı kime hediye etmek istiyorsun?</p>
+
+            <div class="form-group" style="text-align: left; margin-bottom: 25px;">
+                <label style="font-size: 0.9rem; color: var(--text-muted);">Kullanıcı Adı</label>
+                <div style="position: relative;">
+                    <i class="fa-solid fa-user"
+                        style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    <input type="text" id="giftUsername"
+                        style="width: 100%; padding: 12px 12px 12px 40px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;"
+                        placeholder="Örn: Steve">
+                </div>
+            </div>
+
+            <div class="custom-modal-actions">
+                <button class="btn-modal-cancel" onclick="closeGiftModal()">İptal</button>
+                <button class="btn-modal-confirm" onclick="confirmGift()" style="background: #3498db;">Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let currentGiftItem = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadInventory();
+            loadActivityLog();
+        });
+
+        function loadInventory() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const grid = document.getElementById('inventoryGrid');
+            grid.innerHTML = '';
+
+            const items = user.inventory || [];
+
+            if (items.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 1.1rem;">Sandığınız boş. <br><br> <a href="market.html" style="color: var(--primary);">Marketten ürün satın alın.</a></div>';
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const el = document.createElement('div');
+                el.className = 'inv-item';
+                el.innerHTML = `
+                    <i class="${item.icon} inv-icon"></i>
+                    <span class="inv-name">${item.name}</span>
+                    <span class="inv-date">Alındı: ${new Date(item.date).toLocaleDateString('tr-TR')}</span>
+                    <div class="inv-actions">
+                        <button class="btn-action btn-use" onclick="useItem(${index})">Kullan</button>
+                        <button class="btn-action btn-gift" onclick="openGiftModal(${index})">Hediye Et</button>
+                    </div>
+                `;
+                grid.appendChild(el);
+            });
+        }
+
+        function loadActivityLog() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const list = document.getElementById('activityLogList');
+            if (!user) return;
+
+            const logs = (user.activityLog || []).reverse(); // Newest first
+
+            list.innerHTML = '';
+
+            if (logs.length === 0) {
+                list.innerHTML = '<div style="text-align:center; padding: 20px; color: #666;">Aktivite bulunamadı.</div>';
+                return;
+            }
+
+            logs.forEach(log => {
+                let icon = 'fa-circle-info';
+                let color = '#aaa';
+
+                if (log.type === 'purchase') { icon = 'fa-cart-shopping'; color = '#2ecc71'; }
+                if (log.type === 'use') { icon = 'fa-wand-magic-sparkles'; color = '#e67e22'; }
+                if (log.type === 'gift') { icon = 'fa-gift'; color = '#3498db'; }
+
+                const el = document.createElement('div');
+                el.className = 'log-item';
+                el.innerHTML = `
+                    <div class="log-icon" style="color: ${color}; box-shadow: 0 0 10px ${color}20;">
+                        <i class="fa-solid ${icon}"></i>
+                    </div>
+                    <div class="log-content">
+                        <h4>${getErrorTypeTitle(log.type)}</h4>
+                        <p>${log.details}</p>
+                        <span class="log-time">${new Date(log.date).toLocaleString('tr-TR')}</span>
+                    </div>
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        function getErrorTypeTitle(type) {
+            if (type === 'purchase') return 'Satın Alma';
+            if (type === 'use') return 'Kullanıldı';
+            if (type === 'gift') return 'Hediye Gönderildi';
+            return 'İşlem';
+        }
+
+        // Actions
+
+        function useItem(index) {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const item = user.inventory[index];
+
+            showConfirmModal(`"${item.name}" öğesini kullanmak istiyor musunuz?`, () => {
+                // Remove from inventory
+                user.inventory.splice(index, 1);
+
+                // Add log
+                user.activityLog.push({
+                    type: 'use',
+                    details: `${item.name} kullanıldı.`,
+                    date: new Date().toISOString()
+                });
+
+                saveUser(user);
+                loadInventory();
+                loadActivityLog();
+                showToast('Öğe başarıyla kullanıldı! (Simulasyon)', 'success');
+            });
+        }
+
+        function openGiftModal(index) {
+            currentGiftItem = index;
+            document.getElementById('giftModal').classList.add('active');
+        }
+
+        function closeGiftModal() {
+            document.getElementById('giftModal').classList.remove('active');
+            currentGiftItem = null;
+        }
+
+        function confirmGift() {
+            const targetUser = document.getElementById('giftUsername').value.trim();
+            if (!targetUser) {
+                showToast('Lütfen kullanıcı adı girin.', 'warning');
+                return;
+            }
+
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const item = user.inventory[currentGiftItem];
+
+            // In a real app we check if targetUser exists. 
+            // Here we just simulate sending it away.
+
+            user.inventory.splice(currentGiftItem, 1);
+            user.activityLog.push({
+                type: 'gift',
+                details: `${item.name}, ${targetUser} kullanıcısına hediye edildi.`,
+                date: new Date().toISOString()
+            });
+
+            saveUser(user);
+            closeGiftModal();
+            loadInventory();
+            loadActivityLog();
+            showToast(`${item.name}, ${targetUser} kişisine gönderildi.`, 'success');
+        }
+
+        function saveUser(user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            // Sync DB
+            const users = JSON.parse(localStorage.getItem('vion_users')) || [];
+            const idx = users.findIndex(u => u.username === user.username);
+            if (idx > -1) {
+                users[idx] = user;
+                localStorage.setItem('vion_users', JSON.stringify(users));
+            }
+        }
+
+    </script>
+</body>
+
+</html>

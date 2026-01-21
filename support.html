@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destek - VionNetwork</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">VionNetwork</div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Anasayfa</a></li>
+                <li><a href="index.html#features" class="nav-link">Özellikler</a></li>
+                <li><a href="market.html" class="nav-link">Market</a></li>
+                <li><a href="balance.html" class="nav-link">Bakiye</a></li>
+                <li><a href="support.html" class="nav-link active">Destek</a></li>
+            </ul>
+            <a href="market.html" class="nav-cta">Mağaza <i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+    </nav>
+
+    <!-- Support Container -->
+    <section class="support-container">
+
+        <!-- Sidebar: Ticket List -->
+        <div class="support-sidebar">
+            <div class="sidebar-header" id="sidebarHeader">
+                <h3><i class="fa-solid fa-list-ul"></i> Taleplerim</h3>
+            </div>
+            <div id="ticketList" class="ticket-list">
+                <!-- Javascript ile doldurulacak -->
+                <div class="no-tickets">Henüz talep oluşturmadınız.</div>
+            </div>
+        </div>
+
+        <!-- Main Content: Create Form or Ticket View -->
+        <div class="support-main">
+
+            <!-- Notification banner -->
+            <div id="successAlert" class="alert-box success hidden">
+                <i class="fa-solid fa-circle-check"></i> Talebiniz başarıyla yetkililere iletildi!
+            </div>
+
+            <!-- New Ticket Form -->
+            <div id="newTicketForm" class="support-content-block">
+                <h2>Yeni Destek Talebi</h2>
+                <p>Yaşadığınız sorunu veya önerinizi bize iletin.</p>
+
+                <form id="createTicketForm">
+                    <div class="form-group">
+                        <label>Oyun İçi Kullanıcı Adı</label>
+                        <input type="text" id="username" required placeholder="Örn: Steve">
+                    </div>
+                    <div class="form-group">
+                        <label>Konu Başlığı</label>
+                        <input type="text" id="subject" required placeholder="Örn: Bug Bildirimi">
+                    </div>
+                    <div class="form-group">
+                        <label>Mesajınız</label>
+                        <textarea id="message" rows="6" required placeholder="Detayları buraya yazınız..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Talep Oluştur</button>
+                </form>
+            </div>
+
+            <!-- Ticket View (Hidden by default) -->
+            <div id="ticketView" class="support-content-block hidden">
+                <div class="ticket-header">
+                    <div>
+                        <h2 id="viewSubject">Konu Başlığı</h2>
+                        <span id="viewId" class="ticket-id">#1234</span>
+                        <span id="viewStatus" class="status-badge">AÇIK</span>
+                    </div>
+                    <div class="header-actions">
+                        <button id="backToFormBtn" class="btn-subtle" title="Geri Dön"><i
+                                class="fa-solid fa-arrow-left"></i> Geri Dön</button>
+                        <button id="closeTicketBtn" class="btn-close-ticket" title="Talebi Kapat"><i
+                                class="fa-solid fa-lock"></i> Kapat</button>
+                    </div>
+                </div>
+
+                <div id="chatArea" class="chat-area">
+                    <!-- Mesajlar buraya gelecek -->
+                </div>
+
+                <div id="ticketClosedMessage" class="alert-box error hidden"
+                    style="margin-top: 10px; background: rgba(231, 76, 60, 0.1); color: #e74c3c; border-color: rgba(231, 76, 60, 0.3);">
+                    <i class="fa-solid fa-lock"></i> Bu talep kapatılmıştır. Yeni mesaj yazılamaz.
+                </div>
+
+                <form id="replyForm" class="reply-form">
+                    <input type="text" id="replyInput" placeholder="Bir yanıt yazın..." required>
+                    <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Close Ticket Modal -->
+    <div id="closeTicketModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>Talebi Kapat</h3>
+            <p>Lütfen talebi kapatma nedeninizi belirtin.</p>
+            <textarea id="closeReason" rows="4" placeholder="Örn: Sorun çözüldü..."></textarea>
+            <div class="modal-actions">
+                <button id="cancelCloseBtn" class="btn-secondary-modal">İptal</button>
+                <button id="confirmCloseBtn" class="btn-primary-modal">Talebi Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-logo">VionNetwork.</span>
+        <p>&copy; 2026 VionNetwork. Minecraft, Mojang AB'nin ticari markasıdır.</p>
+        <div style="margin-top: 20px; font-size: 1.2rem;">
+            <a href="#" style="margin: 0 10px;"><i class="fa-brands fa-discord"></i></a>
+            <a href="#" style="margin: 0 10px;"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" style="margin: 0 10px;"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="support.js"></script>
+    <script src="auth.js"></script>
+</body>
+
+</html>

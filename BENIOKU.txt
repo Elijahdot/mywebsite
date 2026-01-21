@@ -1,0 +1,23 @@
+VionNetwork Web Sitesi Kurulum Talimatları
+==========================================
+
+Bu proje tamamen "Statik" bir yapıdadır (HTML, CSS, JS). 
+Netlify üzerinden "Drag & Drop" (Sürükle Bırak) yöntemiyle yayınlamak için uygundur.
+
+NASIL YAYINLANIR?
+-----------------
+1. Netlify.com adresine gidin ve giriş yapın.
+2. "Sites" sekmesine gelin.
+3. Bilgisayarınızdaki "vinoweb" klasörünü tutun ve tarayıcıdaki alana sürükleyip bırakın.
+4. Birkaç saniye içinde siteniz yayına girecektir.
+
+VERİTABANI VE GİRİŞ SİSTEMİ HAKKINDA BİLGİ
+------------------------------------------
+Bu proje, veritabanı olarak tarayıcının "LocalStorage" (Yerel Depolama) özelliğini kullanır.
+
+- Gerçek bir sunucuya (MySQL, MongoDB vb.) ihtiyaç DUYMAZ.
+- Bu sayede hiçbir kurulum yapmadan direkt çalışır.
+- ÖNEMLİ: Veriler (Kayıtlı kullanıcılar, bakiye, envanter vb.) her ziyaretçinin KENDİ TARAYICISINDA saklanır. 
+  (Yani siz kendi bilgisayarınızdan girdiğinizde kendi bakiyenizi görürsünüz, arkadaşınız kendi telefonundan girdiğinde sıfırdan hesap açar ve kendi bakiyesini yönetir.)
+
+Sistem kullanıma hazırdır. İyi eğlenceler!

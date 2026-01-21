@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VionNetwork - Bedrock Skyblock Sunucusu</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">VionNetwork</div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link active">Anasayfa</a></li>
+                <li><a href="#features" class="nav-link">Özellikler</a></li>
+                <li><a href="market.html" class="nav-link">Market</a></li>
+                <li><a href="balance.html" class="nav-link">Bakiye</a></li>
+                <li><a href="support.html" class="nav-link">Destek</a></li>
+            </ul>
+            <a href="market.html" class="nav-cta">Mağaza <i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">SÜRÜM 1.20+</span>
+            <h1>Sınırsız Eğlence<br><span>VionNetwork</span>'te Başlar.</h1>
+            <p>Türkiye'nin en gelişmiş Minecraft Bedrock Skyblock sunucusu. Arkadaşlarınla adanı kur, geliş ve
+                sıralamada yüksel.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary"><i class="fa-solid fa-play"></i> Hemen Oyna</button>
+                <button class="btn btn-secondary" onclick="copyIP()"><i class="fa-regular fa-copy"></i> IP
+                    Kopyala</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="features">
+        <div class="feature-card">
+            <i class="fa-solid fa-cubes feature-icon"></i>
+            <h3>Gelişmiş Skyblock</h3>
+            <p>Klasik skyblock deneyimini özel sistemler, minyonlar ve görevlerle bir üst seviyeye taşıdık.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fa-solid fa-coins feature-icon"></i>
+            <h3>Dengeli Ekonomi</h3>
+            <p>Pay-to-win olmayan, emeğe dayalı ve tamamen oyuncu odaklı adil bir ekonomi sistemi.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fa-solid fa-users feature-icon"></i>
+            <h3>Aktif Topluluk</h3>
+            <p>Her gün düzenlenen etkinlikler ve 7/24 aktif yetkili kadrosuyla kesintisiz destek.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-logo">VionNetwork.</span>
+        <p>&copy; 2026 VionNetwork. Minecraft, Mojang AB'nin ticari markasıdır.</p>
+        <div style="margin-top: 20px; font-size: 1.2rem;">
+            <a href="#" style="margin: 0 10px;"><i class="fa-brands fa-discord"></i></a>
+            <a href="#" style="margin: 0 10px;"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" style="margin: 0 10px;"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+</body>
+
+</html>

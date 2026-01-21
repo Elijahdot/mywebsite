@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - VionNetwork</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo"><a href="index.html">VionNetwork</a></div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Anasayfa</a></li>
+                <li><a href="index.html#features" class="nav-link">Özellikler</a></li>
+                <li><a href="market.html" class="nav-link">Market</a></li>
+                <li><a href="balance.html" class="nav-link">Bakiye</a></li>
+                <li><a href="support.html" class="nav-link">Destek</a></li>
+            </ul>
+            <a href="market.html" class="nav-cta">Mağaza <i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+    </nav>
+
+    <!-- Profile Section -->
+    <section class="profile-section" style="padding: 120px 20px; max-width: 1000px; margin: 0 auto;">
+
+        <div class="profile-header"
+            style="display: flex; gap: 30px; align-items: center; background: var(--bg-card); padding: 30px; border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.05);">
+            <img id="profileAvatar" src="" alt="Avatar"
+                style="width: 100px; height: 100px; border-radius: 12px; border: 2px solid var(--primary);">
+
+            <div class="profile-info" style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h1 id="profileName" style="margin-bottom: 5px;">Kullanıcı Adı</h1>
+                        <p id="profileEmail" style="color: var(--text-muted); margin-bottom: 25px;">email@domain.com</p>
+                    </div>
+                    <button onclick="logout()" class="btn-logout">
+                        <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+                    </button>
+                </div>
+
+                <div class="stats-grid"
+                    style="display: flex; gap: 40px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                    <div class="stat">
+                        <span
+                            style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px;">BAKİYE</span>
+                        <span id="profileBalance" style="font-size: 1.8rem; font-weight: 700; color: #2ecc71;">0
+                            ₺</span>
+                        <a href="balance.html" class="btn-add-balance" title="Bakiye Yükle"><i
+                                class="fa-solid fa-plus"></i></a>
+                    </div>
+                    <div class="stat">
+                        <span
+                            style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px;">KAYIT
+                            TARİHİ</span>
+                        <span id="profileDate" style="font-size: 1.2rem; font-weight: 600;">01.01.2024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Tickets -->
+        <h3 style="margin: 40px 0 20px 0;">Geçmiş Talepler</h3>
+        <div id="userTicketList" class="ticket-list-full">
+            <!-- JS Populated -->
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-logo">VionNetwork.</span>
+        <p>&copy; 2026 VionNetwork. Minecraft, Mojang AB'nin ticari markasıdır.</p>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Fill User Info
+            document.getElementById('profileName').textContent = user.username;
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profileBalance').textContent = `${user.balance} ₺`;
+            document.getElementById('profileAvatar').src = `https://mc-heads.net/avatar/${user.username}/100`;
+
+            const date = new Date(user.joinDate);
+            document.getElementById('profileDate').textContent = date.toLocaleDateString('tr-TR');
+
+            const allTickets = JSON.parse(localStorage.getItem('vion_tickets')) || [];
+
+            // Filter tickets for this user
+            const userTickets = allTickets.filter(t => t.username === user.username);
+            const list = document.getElementById('userTicketList');
+
+            if (userTickets.length === 0) {
+                list.innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-muted);">Hiç destek talebiniz bulunmuyor.</div>';
+            } else {
+                userTickets.reverse().forEach(t => {
+                    const div = document.createElement('a');
+                    div.href = "support.html";
+                    div.className = "profile-ticket-item";
+
+                    const statusText = t.status === 'open' ? 'AÇIK' : 'KAPALI';
+                    const statusColor = t.status === 'open' ? '#2ecc71' : '#e74c3c';
+
+                    div.innerHTML = `
+                        <div>
+                            <span class="ticket-subject">${t.subject}</span>
+                            <span class="ticket-id-sub">#${t.id}</span>
+                        </div>
+                        <span style="color: ${statusColor}; font-weight: 700; font-size: 0.9rem; background: ${statusColor}20; padding: 5px 10px; border-radius: 4px;">${statusText}</span>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <style>
+        .btn-logout {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .profile-ticket-item {
+            display: block;
+            background: var(--bg-card);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.2s;
+        }
+
+        .profile-ticket-item:hover {
+            border-color: var(--primary);
+        }
+
+        .ticket-subject {
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: block;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .ticket-id-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .btn-add-balance {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            background: #2ecc71;
+            color: white;
+            border-radius: 50%;
+            margin-left: 10px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            vertical-align: middle;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-add-balance:hover {
+            transform: scale(1.1);
+            background: #27ae60;
+        }
+    </style>
+</body>
+
+</html>
