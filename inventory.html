@@ -298,13 +298,20 @@
             items.forEach((item, index) => {
                 const el = document.createElement('div');
                 el.className = 'inv-item';
+                const isUsed = item.status === 'transferred';
+                const statusBadge = isUsed ? '<span style="color:#e67e22; font-size:0.8rem; display:block; margin-bottom:5px;">(Aktarıldı)</span>' : '';
+
                 el.innerHTML = `
-                    <i class="${item.icon} inv-icon"></i>
-                    <span class="inv-name">${item.name}</span>
+                    <i class="${item.icon} inv-icon" style="${isUsed ? 'opacity:0.5' : ''}"></i>
+                    <span class="inv-name" style="${isUsed ? 'color:#888' : ''}">${item.name}</span>
+                    ${statusBadge}
                     <span class="inv-date">Alındı: ${new Date(item.date).toLocaleDateString('tr-TR')}</span>
                     <div class="inv-actions">
-                        <button class="btn-action btn-use" onclick="useItem(${index})">Kullan</button>
-                        <button class="btn-action btn-gift" onclick="openGiftModal(${index})">Hediye Et</button>
+                        ${isUsed
+                        ? '<button class="btn-action" style="background:#444; color:#888; cursor:not-allowed;" disabled>Oyunda</button>'
+                        : `<button class="btn-action btn-use" onclick="useItem(${index})">Oyuna Aktar</button>`
+                    }
+                        <button class="btn-action btn-gift" onclick="openGiftModal(${index})" ${isUsed ? 'disabled style="display:none"' : ''}>Hediye Et</button>
                     </div>
                 `;
                 grid.appendChild(el);
@@ -358,25 +365,54 @@
 
         // Actions
 
-        function useItem(index) {
+        async function useItem(index) {
             const user = JSON.parse(localStorage.getItem('currentUser'));
             const item = user.inventory[index];
 
-            showConfirmModal(`"${item.name}" öğesini kullanmak istiyor musunuz?`, () => {
-                // Remove from inventory
-                user.inventory.splice(index, 1);
+            // Fallback for ID (mongoose subdoc id is _id)
+            const itemId = item._id;
+            const userId = user.id || user._id;
 
-                // Add log
-                user.activityLog.push({
-                    type: 'use',
-                    details: `${item.name} kullanıldı.`,
-                    date: new Date().toISOString()
-                });
+            if (!itemId) {
+                showToast('Hata: Eşya ID bulunamadı.', 'error');
+                return;
+            }
 
-                saveUser(user);
-                loadInventory();
-                loadActivityLog();
-                showToast('Öğe başarıyla kullanıldı! (Simulasyon)', 'success');
+            if (item.status !== 'active') {
+                showToast('Bu eşya zaten kullanılmış.', 'warning');
+                return;
+            }
+
+            showConfirmModal(`"${item.name}" eşyası "${user.username}" Minecraft hesabınıza aktarılacak. Onaylıyor musunuz?`, async () => {
+
+                // Show loading
+                showToast('İşleniyor...', 'info');
+
+                try {
+                    const res = await fetch('/api/inventory/use', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId, itemId })
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok) throw new Error(data.error || 'İşlem başarısız.');
+
+                    // Success
+                    // Update Local Storage with new data
+                    user.inventory = data.inventory;
+                    user.activityLog = data.activityLog;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+
+                    loadInventory();
+                    loadActivityLog();
+                    showToast(data.message, 'success');
+
+                } catch (err) {
+                    console.error(err);
+                    showToast(err.message, 'error');
+                }
             });
         }
 

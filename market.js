@@ -38,15 +38,12 @@ function goBackToCategory() {
 
 async function buyItem(id, name, price, icon) {
     const user = JSON.parse(localStorage.getItem('currentUser'));
-    // TEMPORARY DEBUG: Show what is in user variable
-    // alert(`DEBUG: User: ${JSON.stringify(user)}`);
 
-    const userId = user ? (user.id || user._id) : null;
+    const userId = user.id || user._id;
 
     if (!user || !userId) {
-        console.error('DEBUG: User or ID missing.', user);
-        showToast('HATA: Giriş bilgisi okunamadı. Lütfen çıkış yapıp tekrar girin.', 'error');
-        // setTimeout(() => window.location.href = 'login.html', 1500); // Disable redirect for debug
+        showToast('Satın almak için giriş yapmalısınız!', 'error');
+        setTimeout(() => window.location.href = 'login.html', 1500);
         return;
     }
 

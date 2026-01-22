@@ -37,6 +37,9 @@ app.use('/api/payment', paymentRoutes);
 const marketRoutes = require('../../backend/routes/market');
 app.use('/api/market', marketRoutes);
 
+const inventoryRoutes = require('../../backend/routes/inventory');
+app.use('/api/inventory', inventoryRoutes);
+
 // Health Check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', time: new Date().toISOString() });
