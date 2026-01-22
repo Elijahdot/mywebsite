@@ -53,5 +53,5 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Not Found' });
 });
 
-// Export handler
-module.exports.handler = serverless(app);
+// Export app for Vercel
+module.exports = app;
