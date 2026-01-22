@@ -147,6 +147,40 @@ function setupMobileMenu() {
             if (menu.classList.contains('active')) toggleMenu();
         };
     });
+
+    // Add Logout Button to Mobile Menu if logged in
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    let mobileLogout = menu.querySelector('.mobile-logout-link');
+
+    if (user) {
+        if (!mobileLogout) {
+            const li = document.createElement('li');
+            li.className = 'mobile-logout-item';
+            li.style.marginTop = 'auto'; // Push to bottom
+            li.style.paddingTop = '20px';
+            li.style.borderTop = '1px solid rgba(255,255,255,0.1)';
+
+            mobileLogout = document.createElement('a');
+            mobileLogout.href = "#";
+            mobileLogout.className = "nav-link mobile-logout-link";
+            mobileLogout.style.color = "#e74c3c";
+            mobileLogout.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap';
+            mobileLogout.onclick = (e) => {
+                e.preventDefault();
+                logout();
+            };
+            li.appendChild(mobileLogout);
+            menu.appendChild(li);
+        }
+    } else if (mobileLogout) {
+        mobileLogout.parentElement.remove();
+    }
+}
+
+function logout() {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    window.location.href = 'index.html';
 }
 
 async function refreshUserProfile() {
