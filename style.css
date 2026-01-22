@@ -183,6 +183,10 @@ a {
     visibility: visible;
 }
 
+.mobile-logout-item {
+    display: none;
+}
+
 /* Market Steps */
 .market-step {
     animation: fadeIn 0.3s ease-out;
@@ -648,6 +652,10 @@ footer {
     .btn-logout {
         width: 100%;
         justify-content: center;
+    }
+
+    .mobile-logout-item {
+        display: block;
     }
 }
 
