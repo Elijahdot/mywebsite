@@ -1,0 +1,5 @@
+name: VionBridge
+main: com.vionnetwork.bridge.VionBridge
+version: 1.0
+api: ["1.1.0"] # Nukkit API sürümünü buraya yazmalısın
+author: VionNetwork

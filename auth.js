@@ -122,7 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupMobileMenu() {
     const navbarContainer = document.querySelector('.navbar-container');
-    if (!navbarContainer) return;
+    const menu = document.querySelector('.nav-menu');
+    if (!navbarContainer || !menu) return; // Menu missing, don't setup mobile toggle
 
     // Create Toggle if not exists
     let toggle = document.querySelector('.mobile-nav-toggle');
@@ -141,8 +142,6 @@ function setupMobileMenu() {
         document.body.appendChild(overlay);
     }
 
-    const menu = document.querySelector('.nav-menu');
-
     function toggleMenu() {
         toggle.classList.toggle('active');
         menu.classList.toggle('active');
@@ -155,37 +154,38 @@ function setupMobileMenu() {
 
     // Close menu when clicking a link
     menu.querySelectorAll('a').forEach(link => {
-        link.onclick = () => {
+        link.onclick = (e) => {
+            // If it's a hash link or just a mock, prevent default might be handled elsewhere
+            // but we definitely want to close the menu
             if (menu.classList.contains('active')) toggleMenu();
         };
     });
 
-    // Add Logout Button to Mobile Menu if logged in
+    // Mobile Menu Auth Links (Login/Logout)
     const user = JSON.parse(localStorage.getItem('currentUser'));
-    let mobileLogout = menu.querySelector('.mobile-logout-link');
+    let mobileAuthItem = menu.querySelector('.mobile-auth-item');
+
+    if (!mobileAuthItem) {
+        mobileAuthItem = document.createElement('li');
+        mobileAuthItem.className = 'mobile-auth-item';
+        mobileAuthItem.style.marginTop = '20px';
+        mobileAuthItem.style.paddingTop = '20px';
+        mobileAuthItem.style.borderTop = '1px solid rgba(255,255,255,0.1)';
+        menu.appendChild(mobileAuthItem);
+    }
 
     if (user) {
-        if (!mobileLogout) {
-            const li = document.createElement('li');
-            li.className = 'mobile-logout-item';
-            li.style.marginTop = 'auto'; // Push to bottom
-            li.style.paddingTop = '20px';
-            li.style.borderTop = '1px solid rgba(255,255,255,0.1)';
-
-            mobileLogout = document.createElement('a');
-            mobileLogout.href = "#";
-            mobileLogout.className = "nav-link mobile-logout-link";
-            mobileLogout.style.color = "#e74c3c";
-            mobileLogout.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap';
-            mobileLogout.onclick = (e) => {
-                e.preventDefault();
-                logout();
-            };
-            li.appendChild(mobileLogout);
-            menu.appendChild(li);
-        }
-    } else if (mobileLogout) {
-        mobileLogout.parentElement.remove();
+        mobileAuthItem.innerHTML = `
+            <a href="#" class="nav-link" style="color: #e74c3c;" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+            </a>
+        `;
+    } else {
+        mobileAuthItem.innerHTML = `
+            <a href="login.html" class="nav-link" style="color: var(--primary);">
+                <i class="fa-solid fa-right-to-bracket"></i> Giriş Yap
+            </a>
+        `;
     }
 }
 
@@ -249,6 +249,7 @@ function updateNavbarAuth() {
             style.id = 'nav-auth-styles';
             style.innerHTML = `
             .nav-actions { display: flex; gap: 15px; align-items: center; }
+            @media (max-width: 768px) { .nav-actions { display: none; } }
             
             .nav-icon-btn {
                 width: 44px; height: 44px;
@@ -269,6 +270,7 @@ function updateNavbarAuth() {
                 transition: 0.2s; cursor: pointer;
             }
             .nav-profile-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
+            @media (max-width: 768px) { .nav-profile-btn { display: none; } }
             `;
             document.head.appendChild(style);
         }
@@ -295,11 +297,13 @@ function updateNavbarAuth() {
                  color: white;
                  background: var(--primary);
                  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+                 display: inline-block;
              }
              .nav-login-btn:hover {
                  transform: translateY(-2px);
                  filter: brightness(1.1);
              }
+             @media (max-width: 768px) { .nav-login-btn { display: none; } }
             `;
             document.head.appendChild(style);
         }

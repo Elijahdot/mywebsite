@@ -1,0 +1,8 @@
+# VionNetwork Minecraft Bridge Configuration
+
+# MongoDB Connection String (Atlas URI)
+# Onemli: MongoDB Atlas uzerinden sunucu IP adresinizi beyaz listeye eklemeyi unutmayin!
+mongodb-uri: "mongodb+srv://vionnetworkadmin:Alsancak333@cluster0.4w9jdtu.mongodb.net/?appName=Cluster0"
+
+# Eger veritabani adini degistirdiyseniz burayi da guncelleyin
+database-name: "test"

@@ -90,14 +90,27 @@ a {
 }
 
 .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 1.5rem;
-    /* Biraz küçültüldü */
     font-weight: 800;
+    letter-spacing: -0.5px;
+    cursor: pointer;
+}
+
+.logo img {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(176, 46, 72, 0.3);
+}
+
+.logo span {
     background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -0.5px;
 }
 
 .nav-menu {
@@ -499,11 +512,20 @@ footer {
 }
 
 .footer-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-main);
     margin-bottom: 20px;
-    display: block;
+}
+
+.footer-logo img {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
 }
 
 @keyframes fadeIn {

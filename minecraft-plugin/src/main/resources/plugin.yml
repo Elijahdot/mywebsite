@@ -1,0 +1,15 @@
+name: VionChest
+version: 1.0
+main: com.vionnetwork.bridge.VionChest
+author: VionNetwork
+api: ["1.0.11"]
+load: POSTWORLD
+commands:
+  teslim:
+    description: Siteden aldiginiz esyalari teslim alirsiniz.
+    aliases: [teslimal, sandik, sandık, chest]
+    permission: vionchest.use
+permissions:
+  vionchest.use:
+    description: Oyuncularin sandigini acmasina izin verir.
+    default: true
