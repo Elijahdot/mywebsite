@@ -33,7 +33,11 @@
                 <li><a href="transfer.html" class="nav-link">Bakiye Gönder</a></li>
                 <li><a href="support.html" class="nav-link">Destek</a></li>
             </ul>
-            <a href="market.html" class="nav-cta">Mağaza <i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="javascript:void(0)" class="nav-cta" id="cart-cta" onclick="toggleCart()">
+                <span>Sepetim</span>
+                <i class="fa-solid fa-cart-shopping"></i>
+                <div class="cart-count-badge" id="cart-count">0</div>
+            </a>
         </div>
     </nav>
 
@@ -99,7 +103,7 @@
 
             <!-- VIP Container -->
             <div id="prod-vip" class="product-group hidden store-grid">
-                <div class="product-card">
+                <div class="product-card" onclick="showProductDetails('vip')">
                     <span class="product-tag">POPÜLER</span>
                     <div class="product-image">
                         <i class="fa-solid fa-crown" style="color: #ffd700;"></i>
@@ -109,10 +113,10 @@
                         <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Hızlı kitler, özel chat rengi ve
                             uçuş hakkı.</p>
                         <span class="product-price">₺50.00</span>
-                        <button class="buy-btn" onclick="buyItem('vip', 'VIP Üyelik', 50, 'fa-crown')">Satın Al</button>
+                        <button class="buy-btn">İncele</button>
                     </div>
                 </div>
-                <div class="product-card">
+                <div class="product-card" onclick="showProductDetails('mvp')">
                     <div class="product-image">
                         <i class="fa-solid fa-shield-halved" style="color: #b02e48;"></i>
                     </div>
@@ -121,11 +125,10 @@
                         <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">2x Kredi, özel efektler ve MVP
                             kitleri.</p>
                         <span class="product-price">₺120.00</span>
-                        <button class="buy-btn" onclick="buyItem('mvp', 'MVP Üyelik', 120, 'fa-shield-halved')">Satın
-                            Al</button>
+                        <button class="buy-btn">İncele</button>
                     </div>
                 </div>
-                <div class="product-card">
+                <div class="product-card" onclick="showProductDetails('mvp_plus')">
                     <div class="product-image">
                         <i class="fa-solid fa-star" style="color: #e67e22;"></i>
                     </div>
@@ -134,15 +137,14 @@
                         <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Sınırsız özellikler, özel tag ve
                             daha fazlası.</p>
                         <span class="product-price">₺200.00</span>
-                        <button class="buy-btn" onclick="buyItem('mvp_plus', 'MVP+ Üyelik', 200, 'fa-star')">Satın
-                            Al</button>
+                        <button class="buy-btn">İncele</button>
                     </div>
                 </div>
             </div>
 
             <!-- Keys Container -->
             <div id="prod-keys" class="product-group hidden store-grid">
-                <div class="product-card">
+                <div class="product-card" onclick="showProductDetails('key_legend')">
                     <div class="product-image">
                         <i class="fa-solid fa-key" style="color: #9b59b6;"></i>
                     </div>
@@ -151,11 +153,10 @@
                         <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Efsanevi kasa açmak için kullanılır.
                         </p>
                         <span class="product-price">₺15.00</span>
-                        <button class="buy-btn"
-                            onclick="buyItem('key_legend', 'Efsanevi Kasa Anahtarı', 15, 'fa-key')">Satın Al</button>
+                        <button class="buy-btn">İncele</button>
                     </div>
                 </div>
-                <div class="product-card">
+                <div class="product-card" onclick="showProductDetails('key_rare')">
                     <div class="product-image">
                         <i class="fa-solid fa-key" style="color: #3498db;"></i>
                     </div>
@@ -163,15 +164,14 @@
                         <h3>Nadir Kasa Anahtarı</h3>
                         <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Nadir eşyalar içerir.</p>
                         <span class="product-price">₺10.00</span>
-                        <button class="buy-btn" onclick="buyItem('key_rare', 'Nadir Kasa Anahtarı', 10, 'fa-key')">Satın
-                            Al</button>
+                        <button class="buy-btn">İncele</button>
                     </div>
                 </div>
             </div>
 
             <!-- Coins/Tools Container -->
             <div id="prod-coins" class="product-group hidden store-grid">
-                <div class="product-card">
+                <div class="product-card" onclick="showProductDetails('tool_pickaxe')">
                     <div class="product-image">
                         <i class="fa-solid fa-hammer" style="color: #3498db;"></i>
                     </div>
@@ -179,11 +179,10 @@
                         <h3>Verimlilik X Kazma</h3>
                         <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Ada kazmak artık çok daha hızlı!</p>
                         <span class="product-price">₺40.00</span>
-                        <button class="buy-btn"
-                            onclick="buyItem('tool_pickaxe', 'Verimlilik X Kazma', 40, 'fa-hammer')">Satın Al</button>
+                        <button class="buy-btn">İncele</button>
                     </div>
                 </div>
-                <div class="product-card">
+                <div class="product-card" onclick="showProductDetails('coin_1m')">
                     <div class="product-image">
                         <i class="fa-solid fa-sack-dollar" style="color: #2ecc71;"></i>
                     </div>
@@ -191,14 +190,60 @@
                         <h3>1M Oyun Parası</h3>
                         <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">Ekonomiye hızlı bir giriş yap.</p>
                         <span class="product-price">₺25.00</span>
-                        <button class="buy-btn"
-                            onclick="buyItem('coin_1m', '1M Oyun Parası', 25, 'fa-sack-dollar')">Satın Al</button>
+                        <button class="buy-btn">İncele</button>
                     </div>
                 </div>
             </div>
         </div>
 
     </section>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h3>Alışveriş Sepeti</h3>
+            <button class="btn-small-icon" onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <!-- Items render via JS -->
+            <p class="empty-cart-msg">Sepetiniz boş.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Toplam</span>
+                <span id="cart-total-price">₺0.00</span>
+            </div>
+            <button class="btn-checkout" id="checkout-btn" onclick="processCheckout()" disabled>Siparişi
+                Tamamla</button>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div id="product-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeProductModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-body">
+                <div class="product-detail-flex">
+                    <div class="modal-img-side" id="modal-icon-container">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <div class="modal-info-side">
+                        <h2 id="modal-title">Ürün İsmi</h2>
+                        <div class="modal-price" id="modal-price">₺50.00</div>
+                        <p class="modal-description" id="modal-desc">
+                            Ürün açıklaması burada yer alacak. Bu ürün sunucumuzda size özel avantajlar sağlar.
+                        </p>
+                        <div class="modal-actions">
+                            <button class="btn-add-cart" id="modal-add-cart-btn">
+                                <i class="fa-solid fa-cart-plus"></i> Sepete Ekle
+                            </button>
+                            <button class="btn-buy-now" id="modal-buy-now-btn">Hemen Satın Al</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer>

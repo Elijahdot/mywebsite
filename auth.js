@@ -219,35 +219,35 @@ async function refreshUserProfile() {
 
 function updateNavbarAuth() {
     const user = JSON.parse(localStorage.getItem('currentUser'));
-    const navCta = document.querySelector('.nav-cta');
-    const existingActions = document.querySelector('.nav-actions');
+    let authContainer = document.getElementById('auth-container');
 
-    const targetEl = existingActions || navCta;
-    if (!targetEl) return;
+    if (!authContainer) {
+        authContainer = document.createElement('div');
+        authContainer.id = 'auth-container';
+        authContainer.className = 'nav-actions';
+        const navCta = document.querySelector('.nav-cta');
+        if (navCta) {
+            navCta.after(authContainer);
+            if (!navCta.onclick && navCta.href.includes('market.html') && !window.location.pathname.includes('market.html')) {
+                navCta.style.display = 'none';
+            }
+        } else {
+            document.querySelector('.navbar-container')?.appendChild(authContainer);
+        }
+    }
 
     if (user) {
-        // Logged In: Chest + Profile
-
-        const chestBtn = document.createElement('a');
-        chestBtn.href = "inventory.html";
-        chestBtn.className = "nav-icon-btn";
-        chestBtn.innerHTML = `<i class="fa-solid fa-box-archive"></i>`;
-        chestBtn.title = "Sandık (Envanter)";
-
         const headUrl = `https://mc-heads.net/avatar/${user.username}/32`;
-        const profileBtn = document.createElement('a');
-        profileBtn.href = "profile.html";
-        profileBtn.className = "nav-profile-btn";
-        profileBtn.innerHTML = `<img src="${headUrl}" alt="${user.username}" style="border-radius: 4px;">`;
-        profileBtn.title = "Profil";
+        authContainer.innerHTML = `
+            <a href="inventory.html" class="nav-icon-btn" title="Sandık"><i class="fa-solid fa-box-archive"></i></a>
+            <a href="profile.html" class="nav-profile-btn" title="Profil"><img src="${headUrl}" alt="${user.username}" style="border-radius: 4px;"></a>
+        `;
 
         if (!document.getElementById('nav-auth-styles')) {
             const style = document.createElement('style');
             style.id = 'nav-auth-styles';
             style.innerHTML = `
-            .nav-actions { display: flex; gap: 15px; align-items: center; }
-            @media (max-width: 768px) { .nav-actions { display: none; } }
-            
+            .nav-actions { display: flex; gap: 15px; align-items: center; margin-left: 15px; }
             .nav-icon-btn {
                 width: 44px; height: 44px;
                 background: rgba(255,255,255,0.05);
@@ -258,7 +258,6 @@ function updateNavbarAuth() {
                 transition: 0.2s; cursor: pointer; text-decoration: none;
             }
             .nav-icon-btn:hover { background: var(--primary); border-color: var(--primary); transform: translateY(-2px); }
-
             .nav-profile-btn { 
                 width: 44px; height: 44px; 
                 border: 2px solid rgba(255,255,255,0.1); 
@@ -267,20 +266,13 @@ function updateNavbarAuth() {
                 transition: 0.2s; cursor: pointer;
             }
             .nav-profile-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
-            @media (max-width: 768px) { .nav-profile-btn { display: none; } }
+            @media (max-width: 768px) { .nav-actions { display: none; } }
             `;
             document.head.appendChild(style);
         }
 
-        const actionsDiv = document.createElement('div');
-        actionsDiv.className = 'nav-actions';
-        actionsDiv.appendChild(chestBtn);
-        actionsDiv.appendChild(profileBtn);
-
-        targetEl.replaceWith(actionsDiv);
-
     } else {
-        // Guest: Only Login
+        authContainer.innerHTML = `<a href="login.html" class="nav-login-btn">Giriş Yap</a>`;
         if (!document.getElementById('nav-guest-styles')) {
             const style = document.createElement('style');
             style.id = 'nav-guest-styles';
@@ -295,22 +287,13 @@ function updateNavbarAuth() {
                  background: var(--primary);
                  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
                  display: inline-block;
+                 margin-left: 15px;
              }
-             .nav-login-btn:hover {
-                 transform: translateY(-2px);
-                 filter: brightness(1.1);
-             }
+             .nav-login-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
              @media (max-width: 768px) { .nav-login-btn { display: none; } }
             `;
             document.head.appendChild(style);
         }
-
-        const loginBtn = document.createElement('a');
-        loginBtn.href = "login.html";
-        loginBtn.className = "nav-login-btn";
-        loginBtn.textContent = "Giriş Yap";
-
-        targetEl.replaceWith(loginBtn);
     }
 }
 

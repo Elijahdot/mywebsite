@@ -7,7 +7,7 @@ load: POSTWORLD
 commands:
   teslim:
     description: Siteden aldiginiz esyalari teslim alirsiniz.
-    aliases: [teslimal, sandik, sandık, chest]
+    aliases: [teslimal]
     permission: vionchest.use
 permissions:
   vionchest.use:
