@@ -278,16 +278,34 @@
             loadActivityLog();
         });
 
-        function loadInventory() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
+        async function loadInventory() {
+            let user = JSON.parse(localStorage.getItem('currentUser'));
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
 
             const grid = document.getElementById('inventoryGrid');
-            grid.innerHTML = '';
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">Yükleniyor...</div>';
 
+            try {
+                // Fetch latest data from server to see plugin updates (delivered status)
+                const res = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': `Bearer ${user.token || ''}` }
+                });
+
+                if (res.ok) {
+                    const freshData = await res.json();
+                    // Update user object but keep the token
+                    const token = user.token;
+                    user = { ...freshData.user, token };
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                }
+            } catch (err) {
+                console.error("Envanter güncellenemedi:", err);
+            }
+
+            grid.innerHTML = '';
             const items = user.inventory || [];
 
             if (items.length === 0) {
@@ -298,17 +316,25 @@
             items.forEach((item, index) => {
                 const el = document.createElement('div');
                 el.className = 'inv-item';
-                const isUsed = item.status === 'transferred';
-                const statusBadge = isUsed ? '<span style="color:#e67e22; font-size:0.8rem; display:block; margin-bottom:5px;">(Aktarıldı)</span>' : '';
+                const isTransferred = item.status === 'transferred';
+                const isDelivered = item.status === 'delivered';
+                const isUsed = isTransferred || isDelivered;
+
+                const statusLabel = isDelivered ? 'Teslim Alındı' : (isTransferred ? 'Aktarılıyor...' : '');
+                const statusBadge = isUsed ? `<span style="color:#e67e22; font-size:0.8rem; display:block; margin-bottom:5px;">(${statusLabel})</span>` : '';
+
+                let iconClass = item.icon || 'fa-box';
+                if (!iconClass.includes('fa-')) iconClass = 'fa-solid fa-' + iconClass;
+                if (!iconClass.includes(' ')) iconClass = 'fa-solid ' + iconClass;
 
                 el.innerHTML = `
-                    <i class="${item.icon} inv-icon" style="${isUsed ? 'opacity:0.5' : ''}"></i>
+                    <i class="${iconClass} inv-icon" style="${isUsed ? 'opacity:0.5' : ''}"></i>
                     <span class="inv-name" style="${isUsed ? 'color:#888' : ''}">${item.name}</span>
                     ${statusBadge}
                     <span class="inv-date">Alındı: ${new Date(item.date).toLocaleDateString('tr-TR')}</span>
                     <div class="inv-actions">
                         ${isUsed
-                        ? '<button class="btn-action" style="background:#444; color:#888; cursor:not-allowed;" disabled>Oyunda</button>'
+                        ? `<button class="btn-action" style="background:#444; color:#888; cursor:not-allowed;" disabled>${isDelivered ? 'Teslim Edildi' : 'Beklemede'}</button>`
                         : `<button class="btn-action btn-use" onclick="useItem(${index})">Oyuna Aktar</button>`
                     }
                         <button class="btn-action btn-gift" onclick="openGiftModal(${index})" ${isUsed ? 'disabled style="display:none"' : ''}>Hediye Et</button>
