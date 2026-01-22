@@ -2,7 +2,7 @@ const express = require('express');
 const serverless = require('serverless-http');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const connectDB = require('../../backend/db');
+const connectDB = require('../backend/db');
 require('dotenv').config();
 
 // Initialize App
@@ -28,19 +28,19 @@ app.use(async (req, res, next) => {
 });
 
 // Import Routes
-const authRoutes = require('../../backend/routes/auth');
+const authRoutes = require('../backend/routes/auth');
 app.use('/api/auth', authRoutes);
 
-const paymentRoutes = require('../../backend/routes/payment');
+const paymentRoutes = require('../backend/routes/payment');
 app.use('/api/payment', paymentRoutes);
 
-const marketRoutes = require('../../backend/routes/market');
+const marketRoutes = require('../backend/routes/market');
 app.use('/api/market', marketRoutes);
 
-const inventoryRoutes = require('../../backend/routes/inventory');
+const inventoryRoutes = require('../backend/routes/inventory');
 app.use('/api/inventory', inventoryRoutes);
 
-const userRoutes = require('../../backend/routes/user');
+const userRoutes = require('../backend/routes/user');
 app.use('/api/user', userRoutes);
 
 // Health Check
