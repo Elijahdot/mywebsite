@@ -167,10 +167,7 @@ function setupMobileMenu() {
 
     if (!mobileAuthItem) {
         mobileAuthItem = document.createElement('li');
-        mobileAuthItem.className = 'mobile-auth-item';
-        mobileAuthItem.style.marginTop = '20px';
-        mobileAuthItem.style.paddingTop = '20px';
-        mobileAuthItem.style.borderTop = '1px solid rgba(255,255,255,0.1)';
+        mobileAuthItem.className = 'mobile-auth-item mobile-only';
         menu.appendChild(mobileAuthItem);
     }
 
