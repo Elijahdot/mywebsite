@@ -38,10 +38,15 @@ function goBackToCategory() {
 
 async function buyItem(id, name, price, icon) {
     const user = JSON.parse(localStorage.getItem('currentUser'));
+    // TEMPORARY DEBUG: Show what is in user variable
+    // alert(`DEBUG: User: ${JSON.stringify(user)}`);
 
-    if (!user || !user.id) {
-        showToast('Satın almak için giriş yapmalısınız!', 'error');
-        setTimeout(() => window.location.href = 'login.html', 1500);
+    const userId = user ? (user.id || user._id) : null;
+
+    if (!user || !userId) {
+        console.error('DEBUG: User or ID missing.', user);
+        showToast('HATA: Giriş bilgisi okunamadı. Lütfen çıkış yapıp tekrar girin.', 'error');
+        // setTimeout(() => window.location.href = 'login.html', 1500); // Disable redirect for debug
         return;
     }
 
@@ -56,7 +61,7 @@ async function buyItem(id, name, price, icon) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    userId: user.id,
+                    userId: userId,
                     item: { id, name, price, icon }
                 })
             });

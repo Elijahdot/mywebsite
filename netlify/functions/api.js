@@ -18,8 +18,12 @@ app.use(async (req, res, next) => {
         await connectDB();
         next();
     } catch (error) {
-        console.error('Database connection failed');
-        res.status(500).json({ error: 'Database connection failed' });
+        console.error('CRITICAL: Database connection failed in middleware.');
+        console.error(error); // Log the full error object
+        res.status(500).json({
+            error: 'Database connection failed',
+            details: error.message
+        });
     }
 });
 
