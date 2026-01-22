@@ -313,10 +313,16 @@
         }
 
         // Pay Logic
-        function processPayment() {
+        async function processPayment() {
             const val = parseFloat(amountInput.value);
             if (!val || val <= 0) {
                 showToast('Lütfen geçerli bir tutar giriniz.', 'error');
+                return;
+            }
+
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user || !user.id) {
+                showToast('Oturum hatası. Lütfen tekrar giriş yapın.', 'error');
                 return;
             }
 
@@ -324,32 +330,45 @@
 
             // Loading State
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> İşleniyor...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Yönlendiriliyor...';
 
-            setTimeout(() => {
-                // Success
-                const user = JSON.parse(localStorage.getItem('currentUser'));
-                user.balance = (parseFloat(user.balance) + val).toFixed(2);
+            try {
+                // Call create payment API
+                const res = await fetch('/api/payment/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        amount: val
+                    })
+                });
 
-                localStorage.setItem('currentUser', JSON.stringify(user));
+                const data = await res.json();
 
-                // Sync with main users array
-                const users = JSON.parse(localStorage.getItem('vion_users')) || [];
-                const idx = users.findIndex(u => u.username === user.username);
-                if (idx > -1) {
-                    users[idx].balance = user.balance;
-                    localStorage.setItem('vion_users', JSON.stringify(users));
+                if (!res.ok) throw new Error(data.error || 'Ödeme oluşturulamadı.');
+
+                // Create Form and Auto-Submit to Shopier
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = data.shopierUrl;
+                form.style.display = 'none';
+
+                for (const key in data.params) {
+                    const input = document.createElement('input');
+                    input.name = key;
+                    input.value = data.params[key];
+                    form.appendChild(input);
                 }
 
-                showToast(`Başarıyla ${val} TL bakiye yüklendi!`, 'success');
+                document.body.appendChild(form);
+                form.submit();
 
-                // Reset UI without reload
+            } catch (err) {
+                console.error(err);
+                showToast(err.message, 'error');
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-lock"></i> Güvenli Ödemeye Geç';
-                updateDisplay();
-                amountInput.value = '';
-                calculateTotal();
-            }, 2000);
+            }
         }
     </script>
 </body>

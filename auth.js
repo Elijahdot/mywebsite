@@ -5,81 +5,130 @@ document.addEventListener('DOMContentLoaded', () => {
     const authAlert = document.getElementById('authAlert');
 
     // --- Helpers ---
-    function getUsers() {
-        return JSON.parse(localStorage.getItem('vion_users')) || [];
-    }
-
-    function saveUser(user) {
-        const users = getUsers();
-        users.push(user);
-        localStorage.setItem('vion_users', JSON.stringify(users));
-    }
-
-    function setCurrentUser(user) {
+    function setCurrentUser(user, token) {
         localStorage.setItem('currentUser', JSON.stringify(user));
+        if (token) localStorage.setItem('token', token);
     }
 
     function showAlert(msg, type = 'error') {
+        if (!authAlert) return;
         authAlert.textContent = msg;
         authAlert.className = `alert-box ${type}`;
         authAlert.classList.remove('hidden');
     }
 
     // --- Actions ---
+    // API_URL is relative because we are on same domain (netlify functions)
+    const API_URL = '/api';
+
     if (registerForm) {
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('regUsername').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
 
-            if (getUsers().find(u => u.email === email)) {
-                showAlert('Bu e-posta adresi zaten kayıtlı.');
-                return;
+            // Loading UI 
+            const submitBtn = registerForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            submitBtn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Kayıt başarısız.');
+                }
+
+                setCurrentUser(data.user, data.token);
+                showAlert('Kayıt başarılı! Yönlendiriliyorsunuz...', 'success');
+                setTimeout(() => window.location.href = 'index.html', 1500);
+
+            } catch (err) {
+                showAlert(err.message);
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
-
-            const newUser = {
-                username,
-                email,
-                password,
-                joinDate: new Date().toISOString(),
-                balance: 0,
-                inventory: [],
-                activityLog: []
-            };
-
-            saveUser(newUser);
-            setCurrentUser(newUser);
-            showAlert('Kayıt başarılı! Yönlendiriliyorsunuz...', 'success');
-            setTimeout(() => window.location.href = 'index.html', 1500);
         });
     }
 
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            const user = getUsers().find(u => u.email === email && u.password === password);
+            // Loading UI
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            submitBtn.disabled = true;
 
-            if (user) {
-                // Ensure inventory/log exists for old users
-                if (!user.inventory) user.inventory = [];
-                if (!user.activityLog) user.activityLog = [];
+            try {
+                const res = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
 
-                setCurrentUser(user);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Giriş başarısız.');
+                }
+
+                setCurrentUser(data.user, data.token);
                 showAlert('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
                 setTimeout(() => window.location.href = 'index.html', 1000);
-            } else {
-                showAlert('E-posta veya şifre hatalı.');
+
+            } catch (err) {
+                showAlert(err.message);
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
         });
     }
 
     // --- Global Navbar Logic ---
     updateNavbarAuth();
+
+    // Refresh User Profile on Page Load (if logged in)
+    refreshUserProfile();
 });
+
+async function refreshUserProfile() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const res = await fetch('/api/auth/me', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+            const user = await res.json();
+            // Update local cache
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            updateNavbarAuth(); // Refresh nav with potentially new avatar/name
+        } else {
+            // Token invalid
+            // localStorage.removeItem('token');
+            // localStorage.removeItem('currentUser');
+            // window.location.href = 'login.html';
+        }
+    } catch (e) {
+        console.error('Failed to refresh profile', e);
+    }
+}
+
 
 function updateNavbarAuth() {
     const user = JSON.parse(localStorage.getItem('currentUser'));

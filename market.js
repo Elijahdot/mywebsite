@@ -36,10 +36,10 @@ function goBackToCategory() {
 
 // --- Purchase Logic ---
 
-function buyItem(id, name, price, icon) {
+async function buyItem(id, name, price, icon) {
     const user = JSON.parse(localStorage.getItem('currentUser'));
 
-    if (!user) {
+    if (!user || !user.id) {
         showToast('Satın almak için giriş yapmalısınız!', 'error');
         setTimeout(() => window.location.href = 'login.html', 1500);
         return;
@@ -50,43 +50,32 @@ function buyItem(id, name, price, icon) {
         return;
     }
 
-    showConfirmModal(`${name} ürününü ${price} TL karşılığında satın almak istiyor musunuz?`, () => {
-        // Deduct Balance
-        user.balance = (parseFloat(user.balance) - price).toFixed(2);
+    showConfirmModal(`${name} ürününü ${price} TL karşılığında satın almak istiyor musunuz?`, async () => {
+        try {
+            const res = await fetch('/api/market/buy', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: user.id,
+                    item: { id, name, price, icon }
+                })
+            });
 
-        // Add to Inventory
-        if (!user.inventory) user.inventory = [];
-        const newItem = {
-            id: '_' + Math.random().toString(36).substr(2, 9),
-            productId: id,
-            name: name,
-            price: price,
-            icon: icon,
-            date: new Date().toISOString(),
-            status: 'active' // active, used, gifted
-        };
-        user.inventory.push(newItem);
+            const data = await res.json();
 
-        // Log Activity
-        if (!user.activityLog) user.activityLog = [];
-        user.activityLog.push({
-            type: 'purchase',
-            details: `${name} satın alındı.`,
-            amount: -price,
-            date: new Date().toISOString()
-        });
+            if (!res.ok) throw new Error(data.error || 'Satın alma başarısız.');
 
-        // Save
-        localStorage.setItem('currentUser', JSON.stringify(user));
+            // Update Local State
+            user.balance = data.balance;
+            user.inventory = data.inventory;
+            user.activityLog = data.activityLog;
+            localStorage.setItem('currentUser', JSON.stringify(user));
 
-        // Sync with main DB (vino_users) for persistence across re-logins
-        const users = JSON.parse(localStorage.getItem('vion_users')) || [];
-        const idx = users.findIndex(u => u.username === user.username);
-        if (idx > -1) {
-            users[idx] = user;
-            localStorage.setItem('vion_users', JSON.stringify(users));
+            showToast(`${name} başarıyla satın alındı!`, 'success');
+
+        } catch (err) {
+            console.error(err);
+            showToast(err.message, 'error');
         }
-
-        showToast(`${name} başarıyla satın alındı!`, 'success');
     });
 }

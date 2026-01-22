@@ -1,23 +1,35 @@
-VionNetwork Web Sitesi Kurulum Talimatları
-==========================================
+VionNetwork Web Sitesi Kurulum Talimatları (V2 - Node.js Backend)
+=================================================================
 
-Bu proje tamamen "Statik" bir yapıdadır (HTML, CSS, JS). 
-Netlify üzerinden "Drag & Drop" (Sürükle Bırak) yöntemiyle yayınlamak için uygundur.
+Bu proje artık "Dinamik" bir yapıdadır (Node.js + MongoDB + Shopier).
+Eski "Sürükle-Bırak" yöntemiyle çalışmaz. GitHub entegrasyonu şarttır.
 
-NASIL YAYINLANIR?
------------------
-1. Netlify.com adresine gidin ve giriş yapın.
-2. "Sites" sekmesine gelin.
-3. Bilgisayarınızdaki "vinoweb" klasörünü tutun ve tarayıcıdaki alana sürükleyip bırakın.
-4. Birkaç saniye içinde siteniz yayına girecektir.
+1. GITHUB'A YÜKLEME
+-------------------
+1. Bilgisayarınızdaki değişiklikleri kaydedin.
+2. Terminali açın ve şu komutları sırasıyla yazın:
+   git add .
+   git commit -m "Backend guncellemesi"
+   git push
 
-VERİTABANI VE GİRİŞ SİSTEMİ HAKKINDA BİLGİ
-------------------------------------------
-Bu proje, veritabanı olarak tarayıcının "LocalStorage" (Yerel Depolama) özelliğini kullanır.
+2. NETLIFY AYARLARI (ÇOK ÖNEMLİ)
+--------------------------------
+Siteyi GitHub'a yüklediğinizde Netlify değişikliği görecek ama ÇALIŞMAYACAKTIR.
+Çünkü şifrelerinizi girmeniz lazım.
 
-- Gerçek bir sunucuya (MySQL, MongoDB vb.) ihtiyaç DUYMAZ.
-- Bu sayede hiçbir kurulum yapmadan direkt çalışır.
-- ÖNEMLİ: Veriler (Kayıtlı kullanıcılar, bakiye, envanter vb.) her ziyaretçinin KENDİ TARAYICISINDA saklanır. 
-  (Yani siz kendi bilgisayarınızdan girdiğinizde kendi bakiyenizi görürsünüz, arkadaşınız kendi telefonundan girdiğinde sıfırdan hesap açar ve kendi bakiyesini yönetir.)
+1. Netlify paneline gidin.
+2. Sitenizi seçin -> "Site configuration" -> "Environment variables".
+3. "Add a variable" butonuna basıp teker teker şunları ekleyin:
 
-Sistem kullanıma hazırdır. İyi eğlenceler!
+   ANAHTAR (Key)          DEĞER (Value)
+   ----------------       --------------------------------------------------
+   MONGODB_URI            (MongoDB Atlas bağlantı linkiniz)
+   JWT_SECRET             (Kafadan uydurduğunuz zor bir şifre)
+   SHOPIER_API_KEY        (Shopier panelinden alacağınız API KEY)
+   SHOPIER_API_SECRET     (Shopier panelinden alacağınız API SECRET)
+
+3. SONUÇ
+--------
+Bu ayarları yaptıktan sonra Netlify'da "Deploys" sekmesine gidip 
+"Trigger deploy" diyerek tekrar başlatmanız gerekebilir. 
+Her şey tamamlandığında site açılacaktır.
