@@ -26,13 +26,13 @@ function copyIP() {
     const ip = "play.vinonetwork.com"; // Placeholder IP
     navigator.clipboard.writeText(ip).then(() => {
         const btn = document.querySelector('.btn-secondary');
-        const originalText = btn.textContent;
-        btn.textContent = "Kopyalandı!";
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Kopyalandı!';
         btn.style.borderColor = "#4cd137";
         btn.style.color = "#4cd137";
-        
+
         setTimeout(() => {
-            btn.textContent = originalText;
+            btn.innerHTML = originalContent;
             btn.style.borderColor = "";
             btn.style.color = "";
         }, 2000);

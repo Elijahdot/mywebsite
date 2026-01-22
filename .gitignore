@@ -9,7 +9,14 @@ node_modules/
 dist/
 build/
 .netlify/
+target/
+*.class
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Secrets and Keys
+*.key
+*.pem
+credentials.json
