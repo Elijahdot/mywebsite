@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakiye Gönder - VionNetwork</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .balance-container {
+            max-width: 800px;
+            margin: 120px auto 60px;
+            padding: 20px;
+        }
+
+        .balance-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px;
+        }
+
+        .current-balance-display {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .current-balance-display span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .current-balance-display h1 {
+            font-size: 3rem;
+            color: #2ecc71;
+            margin: 0;
+        }
+
+        .amount-input-group {
+            margin-bottom: 30px;
+        }
+
+        .amount-input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .amount-input-wrapper {
+            position: relative;
+        }
+
+        .amount-input-wrapper input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 15px 15px 50px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.2rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .amount-input-wrapper i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .btn-pay {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-pay:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-pay:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo"><a href="index.html">VionNetwork</a></div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Anasayfa</a></li>
+                <li><a href="market.html" class="nav-link">Market</a></li>
+                <li><a href="inventory.html" class="nav-link">Sandık</a></li>
+                <li><a href="balance.html" class="nav-link">Bakiye Ekle</a></li>
+                <li><a href="transfer.html" class="nav-link active">Bakiye Gönder</a></li>
+                <li><a href="support.html" class="nav-link">Destek</a></li>
+            </ul>
+            <a href="market.html" class="nav-cta">Mağaza <i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+    </nav>
+
+    <div class="balance-container">
+        <div class="balance-card">
+            <div class="current-balance-display">
+                <span>Mevcut Bakiyeniz</span>
+                <h1 id="displayBalance">0.00 ₺</h1>
+            </div>
+
+            <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-paper-plane" style="color: var(--primary);"></i>
+                Bakiye Gönder</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">
+                Başka bir oyuncuya anında bakiye transferi yapın. Bu işlem geri alınamaz.
+            </p>
+
+            <div class="amount-input-group">
+                <label>Alıcı Kullanıcı Adı</label>
+                <div class="amount-input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="transferTarget" placeholder="Kullanıcı adı girin..." autocomplete="off">
+                </div>
+            </div>
+
+            <div class="amount-input-group">
+                <label>Gönderilecek Tutar</label>
+                <div class="amount-input-wrapper">
+                    <i class="fa-solid fa-turkish-lira-sign"></i>
+                    <input type="number" id="transferAmount" placeholder="0.00" min="1" step="0.5">
+                </div>
+            </div>
+
+            <button id="transferButton" class="btn-pay" onclick="processTransfer()">
+                Gönderimi Onayla
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-logo">VionNetwork.</span>
+        <p>&copy; 2026 VionNetwork. Minecraft, Mojang AB'nin ticari markasıdır.</p>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUser();
+        });
+
+        function loadUser() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (user) {
+                document.getElementById('displayBalance').textContent = parseFloat(user.balance).toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' ₺';
+            }
+        }
+
+        async function processTransfer() {
+            const target = document.getElementById('transferTarget').value.trim();
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (!target) {
+                showToast('Lütfen alıcı kullanıcı adını girin.', 'warning');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                showToast('Lütfen geçerli bir tutar girin.', 'warning');
+                return;
+            }
+            if (amount > user.balance) {
+                showToast('Yetersiz bakiye.', 'error');
+                return;
+            }
+
+            showConfirmModal(`${target} kullanıcısına ${amount} ₺ gönderilecek. Onaylıyor musunuz?`, async () => {
+                const btn = document.getElementById('transferButton');
+                btn.disabled = true;
+                btn.textContent = 'Gönderiliyor...';
+
+                try {
+                    const res = await fetch('/api/user/transfer-balance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            senderId: user.id || user._id,
+                            targetUsername: target,
+                            amount: amount
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Transfer başarısız.');
+
+                    showToast(data.message, 'success');
+
+                    user.balance = data.newBalance;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+
+                    document.getElementById('transferTarget').value = '';
+                    document.getElementById('transferAmount').value = '';
+                    updateDisplay();
+
+                } catch (err) {
+                    showToast(err.message, 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Gönderimi Onayla';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

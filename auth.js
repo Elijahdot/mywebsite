@@ -101,9 +101,53 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Global Navbar Logic ---
     updateNavbarAuth();
 
+    // Mobile Menu Toggle
+    setupMobileMenu();
+
     // Refresh User Profile on Page Load (if logged in)
     refreshUserProfile();
 });
+
+function setupMobileMenu() {
+    const navbarContainer = document.querySelector('.navbar-container');
+    if (!navbarContainer) return;
+
+    // Create Toggle if not exists
+    let toggle = document.querySelector('.mobile-nav-toggle');
+    if (!toggle) {
+        toggle = document.createElement('div');
+        toggle.className = 'mobile-nav-toggle';
+        toggle.innerHTML = '<span></span><span></span><span></span>';
+        navbarContainer.appendChild(toggle);
+    }
+
+    // Create Overlay if not exists
+    let overlay = document.querySelector('.mobile-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'mobile-overlay';
+        document.body.appendChild(overlay);
+    }
+
+    const menu = document.querySelector('.nav-menu');
+
+    function toggleMenu() {
+        toggle.classList.toggle('active');
+        menu.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+    }
+
+    toggle.onclick = toggleMenu;
+    overlay.onclick = toggleMenu;
+
+    // Close menu when clicking a link
+    menu.querySelectorAll('a').forEach(link => {
+        link.onclick = () => {
+            if (menu.classList.contains('active')) toggleMenu();
+        };
+    });
+}
 
 async function refreshUserProfile() {
     const token = localStorage.getItem('token');
