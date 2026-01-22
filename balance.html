@@ -194,9 +194,10 @@
             <div class="logo"><a href="index.html">VionNetwork</a></div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">Anasayfa</a></li>
-                <li><a href="index.html#features" class="nav-link">Özellikler</a></li>
                 <li><a href="market.html" class="nav-link">Market</a></li>
-                <li><a href="balance.html" class="nav-link active">Bakiye</a></li>
+                <li><a href="inventory.html" class="nav-link">Sandık</a></li>
+                <li><a href="balance.html" class="nav-link active">Bakiye Ekle</a></li>
+                <li><a href="transfer.html" class="nav-link">Bakiye Gönder</a></li>
                 <li><a href="support.html" class="nav-link">Destek</a></li>
             </ul>
             <a href="market.html" class="nav-cta">Mağaza <i class="fa-solid fa-cart-shopping"></i></a>
@@ -253,33 +254,6 @@
             </button>
         </div>
 
-        <div class="balance-card" style="margin-top: 30px;">
-            <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-paper-plane"></i> Bakiye Gönder</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
-                Arkadaşınıza anında bakiye transferi yapın. İşlem geri alınamaz.
-            </p>
-
-            <div class="amount-input-group">
-                <label>Alıcı Kullanıcı Adı</label>
-                <div class="amount-input-wrapper">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" id="transferTarget" placeholder="Kullanıcı adı girin..."
-                        style="padding-left: 50px;">
-                </div>
-            </div>
-
-            <div class="amount-input-group">
-                <label>Gönderilecek Tutar</label>
-                <div class="amount-input-wrapper">
-                    <i class="fa-solid fa-turkish-lira-sign"></i>
-                    <input type="number" id="transferAmount" placeholder="0.00" min="1">
-                </div>
-            </div>
-
-            <button id="transferButton" class="btn-pay" style="background: var(--primary);" onclick="processTransfer()">
-                Bakiye Gönder
-            </button>
-        </div>
     </div>
 
     <!-- Footer -->
@@ -391,63 +365,6 @@
             }
         }
 
-        // Transfer Logic
-        async function processTransfer() {
-            const target = document.getElementById('transferTarget').value.trim();
-            const amount = parseFloat(document.getElementById('transferAmount').value);
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-
-            if (!target) {
-                showToast('Lütfen alıcı kullanıcı adını girin.', 'warning');
-                return;
-            }
-            if (!amount || amount <= 0) {
-                showToast('Lütfen geçerli bir tutar girin.', 'warning');
-                return;
-            }
-            if (amount > user.balance) {
-                showToast('Yetersiz bakiye.', 'error');
-                return;
-            }
-
-            showConfirmModal(`${target} kullanıcısına ${amount} ₺ gönderilecek. Onaylıyor musunuz?`, async () => {
-                const btn = document.getElementById('transferButton');
-                btn.disabled = true;
-                btn.textContent = 'Gönderiliyor...';
-
-                try {
-                    const res = await fetch('/api/user/transfer-balance', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            senderId: user.id || user._id,
-                            targetUsername: target,
-                            amount: amount
-                        })
-                    });
-
-                    const data = await res.json();
-                    if (!res.ok) throw new Error(data.error || 'Transfer başarısız.');
-
-                    // Success
-                    showToast(data.message, 'success');
-
-                    // Update Local UI
-                    user.balance = data.newBalance;
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-
-                    document.getElementById('transferTarget').value = '';
-                    document.getElementById('transferAmount').value = '';
-                    updateDisplay();
-
-                } catch (err) {
-                    showToast(err.message, 'error');
-                } finally {
-                    btn.disabled = false;
-                    btn.textContent = 'Bakiye Gönder';
-                }
-            });
-        }
     </script>
 </body>
 
