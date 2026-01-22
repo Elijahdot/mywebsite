@@ -41,7 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ username, email, password })
                 });
 
-                const data = await res.json();
+                const contentType = res.headers.get("content-type");
+                let data;
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    data = await res.json();
+                } else {
+                    throw new Error('Sunucu şu an yanıt vermiyor (Geçersiz yanıt formatı).');
+                }
 
                 if (!res.ok) {
                     throw new Error(data.error || 'Kayıt başarısız.');
@@ -79,7 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ email, password })
                 });
 
-                const data = await res.json();
+                const contentType = res.headers.get("content-type");
+                let data;
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    data = await res.json();
+                } else {
+                    throw new Error('Sunucu şu an yanıt vermiyor (Geçersiz yanıt formatı).');
+                }
 
                 if (!res.ok) {
                     throw new Error(data.error || 'Giriş başarısız.');
