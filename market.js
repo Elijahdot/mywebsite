@@ -54,7 +54,7 @@ const productsData = {
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function selectGameMode(mode) {
-    if (mode === 'faction' || mode === 'skyblock') { // Keep skyblock for logic compatibility if needed or just use faction
+    if (mode === 'faction') {
         document.getElementById('step-gamemode').classList.add('hidden');
         document.getElementById('step-category').classList.remove('hidden');
     }
