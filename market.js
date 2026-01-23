@@ -4,57 +4,57 @@ const productsData = {
         name: 'VIP Üyelik',
         price: 50,
         icon: 'fa-crown',
-        shortDesc: 'Hızlı kitler, özel chat rengi ve uçuş hakkı.',
-        longDesc: 'VIP Üyelik ile sunucumuzda ayrıcalıklı bir deneyim yaşayın. \n\n• /fly komutu ile uçuş hakkı\n• Özel [VIP] ön eki\n• VIP özel kitleri\n• Dolu sunucuya giriş hakkı\n• Renkli chat yazma özgürlüğü'
+        shortDesc: 'Özel kitler ve hammaddelere erişim.',
+        longDesc: 'VIP Üyelik ile Faction dünyasında bir adım öne geçin. \n\n• /kit vip erişimi\n• VIP Hammadde kullanım hakkı\n• Arsa limiti artışı\n• Özel [VIP] ön eki\n• Renkli chat yazma özgürlüğü'
     },
     'mvp': {
         name: 'MVP Üyelik',
         price: 120,
         icon: 'fa-shield-halved',
-        shortDesc: '2x Kredi, özel efektler ve MVP kitleri.',
-        longDesc: 'MVP Üyelik, VIP özelliklerinin üzerine ekstra güç katar. \n\n• VIP+ Tüm özellikleri içerir\n• 2x Daha fazla kredi kazanımı\n• Özel giriş mesajı\n• Sanal market (/market) erişimi\n• MVP özel kitleri'
+        shortDesc: '2x Rütbe Puanı ve özel savaş kitleri.',
+        longDesc: 'MVP Üyelik ile savaşın hakimi olun. \n\n• VIP+ Tüm özellikleri içerir\n• 2x Daha fazla rütbe puanı kazanımı\n• MVP Hammadde erişimi\n• /kit mvp ile güçlü zırhlar\n• Özel giriş mesajı'
     },
     'mvp_plus': {
         name: 'MVP+ Üyelik',
         price: 200,
         icon: 'fa-star',
-        shortDesc: 'Sınırsız özellikler, özel tag ve daha fazlası.',
-        longDesc: 'Sunucumuzun en üst düzey üyeliği! \n\n• Tüm üyeliklerin özelliklerini içerir\n• Sınırsız sanal depo alanı\n• Özel efektler ve partiküller\n• Sunucu etkinliklerinde öncelik\n• MVP+ Özel VIP kiti'
+        shortDesc: 'Sınırsız güç ve edit hammadde erişimi.',
+        longDesc: 'VionNetwork Faction dünyasındaki en üst rütbe! \n\n• Tüm rütbelerin özelliklerini içerir\n• Edit Hammaddeye ücretsiz erişim\n• /warp edit yetkisi\n• Klan kurma ücretinde indirim\n• MVP+ Özel VIP kiti'
     },
     'key_legend': {
         name: 'Efsanevi Kasa Anahtarı',
         price: 15,
         icon: 'fa-key',
         shortDesc: 'Efsanevi kasa açmak için kullanılır.',
-        longDesc: 'Efsanevi kasalardan en nadir eşyaları çıkarma şansı yakalayın! \n\n• %5 şansla Verimlilik X kazma\n• %2 şansla Özel Kanatlar\n• Nadir kozmetikler ve oyun parası'
+        longDesc: 'Efsanevi kasalardan en güçlü edit eşyaları çıkarma şansı! \n\n• %5 şansla Keskinlik X Kılıç\n• %2 şansla Koruma X Zırh\n• Nadir rütbe puanı paketleri'
     },
     'key_rare': {
         name: 'Nadir Kasa Anahtarı',
         price: 10,
         icon: 'fa-key',
-        shortDesc: 'Nadir eşyalar içerir.',
-        longDesc: 'Nadir kasa anahtarı ile kasanızı açın ve gelişiminizi hızlandırın. \n\n• Güçlü zırhlar ve silahlar\n• Başlangıç seviyesi büyülü kitaplar\n• Oyun parası paketleri'
+        shortDesc: 'Nadir savaş eşyaları içerir.',
+        longDesc: 'Nadir kasa ile savaş ekipmanlarınızı güçlendirin. \n\n• Keskinlik 5 Kılıçlar\n• Altın Elma (Büyülü) paketleri\n• Seviye şişeleri'
     },
     'tool_pickaxe': {
-        name: 'Verimlilik X Kazma',
+        name: 'Keskinlik X Kılıç',
         price: 40,
-        icon: 'fa-hammer',
-        shortDesc: 'Ada kazmak artık çok daha hızlı!',
-        longDesc: 'Bu özel kazma ile madenleri ve adanızı ışık hızında kazın. \n\n• Verimlilik 10 (Efficiency X)\n• Kırılmazlık 10 (Unbreaking X)\n• Servet 5 (Fortune V)'
+        icon: 'fa-khanda',
+        shortDesc: 'Rakiplerinizi dize getirin!',
+        longDesc: 'Bu özel kılıç ile klan savaşlarında durdurulamaz olun. \n\n• Keskinlik 10 (Sharpness X)\n• Kırılmazlık 10 (Unbreaking X)\n• Savurma 2 (Knockback II)'
     },
     'coin_1m': {
-        name: '1M Oyun Parası',
+        name: '10K Klan Kredisi',
         price: 25,
-        icon: 'fa-sack-dollar',
-        shortDesc: 'Ekonomiye hızlı bir giriş yap.',
-        longDesc: 'Adanızı büyütmek veya marketten eşya almak için ihtiyacınız olan nakit desteği. \n\n• Hesabınıza anında 1.000.000 Oyun Parası eklenir.'
+        icon: 'fa-shield-heart',
+        shortDesc: 'Klanınızı hızla güçlendirin.',
+        longDesc: 'Klan seviyenizi artırmak veya klan marketinden özel güçlendirmeler almak için kullanılır. \n\n• Hesabınıza anında 10.000 Klan Kredisi eklenir.'
     }
 };
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function selectGameMode(mode) {
-    if (mode === 'skyblock') {
+    if (mode === 'faction' || mode === 'skyblock') { // Keep skyblock for logic compatibility if needed or just use faction
         document.getElementById('step-gamemode').classList.add('hidden');
         document.getElementById('step-category').classList.remove('hidden');
     }
