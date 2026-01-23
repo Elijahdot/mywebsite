@@ -93,7 +93,13 @@ function showProductDetails(id) {
 
     document.getElementById('modal-title').textContent = product.name;
     document.getElementById('modal-price').textContent = `₺${product.price.toFixed(2)}`;
-    document.getElementById('modal-desc').innerHTML = product.longDesc.replace(/\n/g, '<br>');
+
+    // Format longDesc: replace bullets with checkmarks and wrap in list styling
+    const formattedDesc = product.longDesc
+        .replace(/•/g, '<i class="fa-solid fa-check" style="color:var(--primary); margin-right:8px; font-size:0.9rem;"></i>')
+        .replace(/\n/g, '<br>');
+
+    document.getElementById('modal-desc').innerHTML = formattedDesc;
     document.getElementById('modal-icon-container').innerHTML = `<i class="fa-solid ${product.icon}"></i>`;
 
     // Set Action Buttons
